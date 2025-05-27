@@ -93,27 +93,28 @@ const [touchStartY, setTouchStartY] = useState<number | null>(null);
 const [touchDragIndex, setTouchDragIndex] = useState<number | null>(null);
 
 function handleTouchStart(e: React.TouchEvent, index: number) {
-  setTouchStartY(e.touches[0].clientY);
-  setTouchDragIndex(index);
+    setTouchStartY(e.touches[0].clientY);
+    setTouchDragIndex(index);
 }
 
 function handleTouchMove(e: React.TouchEvent) {
-  if (touchStartY === null || touchDragIndex === null) return;
-  const currentY = e.touches[0].clientY;
-  const deltaY = currentY - touchStartY;
+    e.preventDefault(); 
+    if (touchStartY === null || touchDragIndex === null) return;
+    const currentY = e.touches[0].clientY;
+    const deltaY = currentY - touchStartY;
 
-  if (Math.abs(deltaY) > 30) {
-    const direction = deltaY > 0 ? 1 : -1;
-    const newIndex = touchDragIndex + direction;
-    if (newIndex >= 0 && newIndex < todo.length) {
-      const newTodo = [...todo];
-      const [removed] = newTodo.splice(touchDragIndex, 1);
-      newTodo.splice(newIndex, 0, removed);
-      setTodo(newTodo);
-      setTouchDragIndex(newIndex);
-      setTouchStartY(currentY);
+    if (Math.abs(deltaY) > 30) {
+        const direction = deltaY > 0 ? 1 : -1;
+        const newIndex = touchDragIndex + direction;
+        if (newIndex >= 0 && newIndex < todo.length) {
+        const newTodo = [...todo];
+        const [removed] = newTodo.splice(touchDragIndex, 1);
+        newTodo.splice(newIndex, 0, removed);
+        setTodo(newTodo);
+        setTouchDragIndex(newIndex);
+        setTouchStartY(currentY);
+        }
     }
-  }
 }
 
 function handleTouchEnd() {
