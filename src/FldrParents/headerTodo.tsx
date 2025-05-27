@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { Checkbox } from "@/components/ui/checkbox"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { Plus, Search, Trash, Maximize2, Minimize2, Trash2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ToDoItem {
     text: string;
@@ -90,14 +91,34 @@ function handleClearAll() {
 return (
     <>
     <div className="flex flex-col items-center gap-5 min-w-[300px] text-base">
-    <Button
-        className="self-end"
-        variant="outline"
-        onClick={() => setFullWidth(w => !w)}
-        title={fullWidth ? "Shrink" : "Expand"}
-    >
-        {fullWidth ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
-    </Button>
+        <div className={cn("flex flex-row justify-between", width)}>
+            <Button
+            className="self-end"
+            variant="outline"
+            onClick={() => setFullWidth(w => !w)}
+            title={fullWidth ? "Shrink" : "Expand"}
+        >
+            {fullWidth ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+        </Button>
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button
+                className="bg-red-500 hover:bg-red-600 text-white self-start"
+                >
+                    <Trash2 className="w-4 h-4" />
+                </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                <AlertDialogTitle>Clear all tasks?</AlertDialogTitle>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction className="bg-red-500 hover:bg-red-600 text-white" onClick={handleClearAll}>Clear</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+        </div>
     <Card className={width}>
         <CardContent>
             <div className="grid grid-cols-2 gap-4 items-center">
@@ -158,24 +179,9 @@ return (
             </ol>
         </CardContent>
     </Card>
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button
-        className="bg-red-500 hover:bg-red-600 text-white self-end"
-        >
-            <Trash2 className="w-4 h-4" />
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Clear all tasks?</AlertDialogTitle>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction className="bg-red-500 hover:bg-red-600 text-white" onClick={handleClearAll}>Clear</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    </div>
+    <div className="absolute flex bottom-0 left-0 w-full items-center justify-center text-[1.01rem] text-gray-800 py-2">
+        <p>Copyright &#169; 2025 Kim Diaz</p>
     </div>
     </>
 )
