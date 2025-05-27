@@ -192,7 +192,7 @@ return (
                     return (
                         <li
                         key={index}
-                        className="flex items-center w-full justify-between text-[1.15rem]"
+                        className="flex items-center w-full justify-between text-[1.15rem] touch-action-none"
                         draggable
                         onDragStart={() => handleDragStart(index)}
                         onDragOver={() => handleDragOver(index)}
