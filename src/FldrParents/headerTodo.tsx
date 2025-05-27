@@ -88,6 +88,39 @@ function handleClearAll() {
     setTodo([]);
 }
 
+// mobile
+const [touchStartY, setTouchStartY] = useState<number | null>(null);
+const [touchDragIndex, setTouchDragIndex] = useState<number | null>(null);
+
+function handleTouchStart(e: React.TouchEvent, index: number) {
+  setTouchStartY(e.touches[0].clientY);
+  setTouchDragIndex(index);
+}
+
+function handleTouchMove(e: React.TouchEvent) {
+  if (touchStartY === null || touchDragIndex === null) return;
+  const currentY = e.touches[0].clientY;
+  const deltaY = currentY - touchStartY;
+
+  if (Math.abs(deltaY) > 30) {
+    const direction = deltaY > 0 ? 1 : -1;
+    const newIndex = touchDragIndex + direction;
+    if (newIndex >= 0 && newIndex < todo.length) {
+      const newTodo = [...todo];
+      const [removed] = newTodo.splice(touchDragIndex, 1);
+      newTodo.splice(newIndex, 0, removed);
+      setTodo(newTodo);
+      setTouchDragIndex(newIndex);
+      setTouchStartY(currentY);
+    }
+  }
+}
+
+function handleTouchEnd() {
+  setTouchStartY(null);
+  setTouchDragIndex(null);
+}
+
 return (
     <>
     <div className="flex flex-col items-center gap-5 min-w-[300px] text-base">
@@ -110,7 +143,7 @@ return (
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                <AlertDialogTitle>Clear all tasks?</AlertDialogTitle>
+                <AlertDialogTitle>Clear all?</AlertDialogTitle>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -127,7 +160,7 @@ return (
                 </h1>
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-row items-center">
-                        <Input placeholder="New task" value={task} 
+                        <Input placeholder="Task" value={task} 
                             onChange={handleInput}
                             onKeyDown={(e) => {if (e.key === "Enter") handleAdd(); }}
                             className="me-2 text-lg"
@@ -155,11 +188,16 @@ return (
                 filteredTodo.map((item) => {
                     const index = todo.indexOf(item);
                     return (
-                        <li key={index} className="flex items-center w-full justify-between text-[1.15rem]"
-                            draggable
-                            onDragStart={()=>handleDragStart(index)}
-                            onDragOver={()=>handleDragOver(index)}
-                            onDragEnd={handleDragEnd}
+                        <li
+                        key={index}
+                        className="flex items-center w-full justify-between text-[1.15rem]"
+                        draggable
+                        onDragStart={() => handleDragStart(index)}
+                        onDragOver={() => handleDragOver(index)}
+                        onDragEnd={handleDragEnd}
+                        onTouchStart={e => handleTouchStart(e, index)}
+                        onTouchMove={e => handleTouchMove(e)}
+                        onTouchEnd={handleTouchEnd}
                         >
                             <span className="flex items-center gap-2">
                                 <Checkbox className="bg-gray-200" checked={item.check} onCheckedChange={()=>handleCheck(index)}/>
