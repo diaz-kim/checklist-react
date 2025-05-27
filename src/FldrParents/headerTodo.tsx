@@ -123,7 +123,8 @@ function handleTouchEnd() {
 
 return (
     <>
-    <div className="flex flex-col items-center gap-5 min-w-[300px] text-base">
+    <div className="min-h-[90vh] flex flex-col">
+    <div className="flex flex-col items-center gap-5 min-w-[300px] text-base flex-1">
         <div className={cn("flex flex-row justify-between", width)}>
             <Button
             className="self-end"
@@ -218,8 +219,9 @@ return (
         </CardContent>
     </Card>
     </div>
-    <div className="absolute flex bottom-0 left-0 w-full items-center justify-center text-[1.01rem] text-gray-800 py-2">
+    <div className="w-full flex items-center justify-center text-[1.01rem] text-gray-800 py-2 bg-background">
         <p>Copyright &#169; 2025 Kim Diaz</p>
+    </div>
     </div>
     </>
 )
