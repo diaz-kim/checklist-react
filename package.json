@@ -1,5 +1,6 @@
 {
   "name": "checklist",
+  "homepage": "https://diaz-kim/github.io/checklist-react/",
   "private": true,
   "description": "A to-do list app.",
   "author": "Kim Diaz",
@@ -13,15 +14,19 @@
     "electron": "electron .",
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-checkbox": "^1.3.1",
-    "@radix-ui/react-slot": "^1.2.2",
+    "@radix-ui/react-slot": "^1.2.3",
     "@tailwindcss/vite": "^4.1.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "electron-squirrel-startup": "^1.0.1",
+    "gh-pages": "^6.3.0",
     "lucide-react": "^0.510.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -58,7 +63,9 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "checklist"
+            "name": "checklist",
+            "setupIcon": "public/notepad_icon.ico",
+            "iconUrl": "https://example.com/icon.ico"
           }
         }
       ]
