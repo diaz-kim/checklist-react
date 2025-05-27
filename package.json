@@ -4,7 +4,7 @@
   "private": true,
   "description": "A to-do list app.",
   "author": "Kim Diaz",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
