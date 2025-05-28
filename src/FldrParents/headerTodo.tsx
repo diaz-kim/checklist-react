@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react";
 import { Checkbox } from "@/components/ui/checkbox"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
-import { Plus, Search, Trash, Maximize2, Minimize2, Trash2 } from "lucide-react";
+import { Plus, Search, Trash, Maximize2, Minimize2, Trash2, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ToDoItem {
@@ -13,6 +13,29 @@ interface ToDoItem {
 }
 
 function HeaderTodo() { 
+
+const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+
+useEffect(() => {
+  if (theme === 'dark') {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+}, [theme]);
+
+const toggleMode = () => {
+    const htmlElement = document.documentElement;
+    if (htmlElement.classList.contains('dark')) {
+        htmlElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+        setTheme('light');
+    } else {
+        htmlElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+        setTheme('dark');
+    }
+};
 
 const [fullWidth, setFullWidth] = useState(false);
 const width = fullWidth ? "w-full" : "w-full md:w-[60vw]";
@@ -89,70 +112,76 @@ function handleClearAll() {
 }
 
 // mobile
-const [touchStartY, setTouchStartY] = useState<number | null>(null);
-const [touchDragIndex, setTouchDragIndex] = useState<number | null>(null);
+// const [touchStartY, setTouchStartY] = useState<number | null>(null);
+// const [touchDragIndex, setTouchDragIndex] = useState<number | null>(null);
 
-function handleTouchStart(e: React.TouchEvent, index: number) {
-    setTouchStartY(e.touches[0].clientY);
-    setTouchDragIndex(index);
-}
+// function handleTouchStart(e: React.TouchEvent, index: number) {
+//     setTouchStartY(e.touches[0].clientY);
+//     setTouchDragIndex(index);
+// }
 
-function handleTouchMove(e: React.TouchEvent) {
-    e.preventDefault(); 
-    if (touchStartY === null || touchDragIndex === null) return;
-    const currentY = e.touches[0].clientY;
-    const deltaY = currentY - touchStartY;
+// function handleTouchMove(e: React.TouchEvent) {
+//     e.preventDefault(); 
+//     if (touchStartY === null || touchDragIndex === null) return;
+//     const currentY = e.touches[0].clientY;
+//     const deltaY = currentY - touchStartY;
 
-    if (Math.abs(deltaY) > 30) {
-        const direction = deltaY > 0 ? 1 : -1;
-        const newIndex = touchDragIndex + direction;
-        if (newIndex >= 0 && newIndex < todo.length) {
-        const newTodo = [...todo];
-        const [removed] = newTodo.splice(touchDragIndex, 1);
-        newTodo.splice(newIndex, 0, removed);
-        setTodo(newTodo);
-        setTouchDragIndex(newIndex);
-        setTouchStartY(currentY);
-        }
-    }
-}
+//     if (Math.abs(deltaY) > 30) {
+//         const direction = deltaY > 0 ? 1 : -1;
+//         const newIndex = touchDragIndex + direction;
+//         if (newIndex >= 0 && newIndex < todo.length) {
+//         const newTodo = [...todo];
+//         const [removed] = newTodo.splice(touchDragIndex, 1);
+//         newTodo.splice(newIndex, 0, removed);
+//         setTodo(newTodo);
+//         setTouchDragIndex(newIndex);
+//         setTouchStartY(currentY);
+//         }
+//     }
+// }
 
-function handleTouchEnd() {
-  setTouchStartY(null);
-  setTouchDragIndex(null);
-}
+// function handleTouchEnd() {
+//   setTouchStartY(null);
+//   setTouchDragIndex(null);
+// }
 
 return (
     <>
     <div className="min-h-[90vh] flex flex-col">
     <div className="flex flex-col items-center gap-5 min-w-[300px] text-base flex-1">
         <div className={cn("flex flex-row justify-between", width)}>
-            <Button
-            className="self-end"
-            variant="outline"
-            onClick={() => setFullWidth(w => !w)}
-            title={fullWidth ? "Shrink" : "Expand"}
-        >
-            {fullWidth ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
-        </Button>
-        <AlertDialog>
-            <AlertDialogTrigger asChild>
+            <div>
                 <Button
-                className="bg-red-500 hover:bg-red-600 text-white self-start"
+                    className="self-end"
+                    variant="ghost"
+                    onClick={() => setFullWidth(w => !w)}
+                    title={fullWidth ? "Shrink" : "Expand"}
                 >
-                    <Trash2 className="w-4 h-4" />
+                    {fullWidth ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
                 </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                <AlertDialogTitle>Clear all?</AlertDialogTitle>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction className="bg-red-500 hover:bg-red-600 text-white" onClick={handleClearAll}>Clear</AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
+                <Button variant='ghost' onClick={toggleMode}>
+                    {theme === 'dark' ? <Sun /> : <Moon />}
+                </Button>
+            </div>
+            <AlertDialog>
+                <AlertDialogTrigger asChild>
+                    <Button
+                    variant="ghost"
+                    className="text-white self-start"
+                    >
+                        <Trash2 className="w-4 h-4" color="red" />
+                    </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                    <AlertDialogTitle>Clear all?</AlertDialogTitle>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction className="bg-red-500 hover:bg-red-600 text-white" onClick={handleClearAll}>Clear</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     <Card className={width}>
         <CardContent>
@@ -197,9 +226,9 @@ return (
                         onDragStart={() => handleDragStart(index)}
                         onDragOver={() => handleDragOver(index)}
                         onDragEnd={handleDragEnd}
-                        onTouchStart={e => handleTouchStart(e, index)}
-                        onTouchMove={e => handleTouchMove(e)}
-                        onTouchEnd={handleTouchEnd}
+                        // onTouchStart={e => handleTouchStart(e, index)}
+                        // onTouchMove={e => handleTouchMove(e)}
+                        // onTouchEnd={handleTouchEnd}
                         >
                             <span className="flex items-center gap-2">
                                 <Checkbox className="bg-gray-200" checked={item.check} onCheckedChange={()=>handleCheck(index)}/>
@@ -220,7 +249,7 @@ return (
         </CardContent>
     </Card>
     </div>
-    <div className="w-full flex items-center justify-center text-[1.01rem] text-gray-800 py-2 bg-background">
+    <div className="w-full flex items-center justify-center text-[1.01rem] text-gray-800 py-2 bg-background dark:text-gray-200">
         <p>Copyright &#169; 2025 Kim Diaz</p>
     </div>
     </div>
